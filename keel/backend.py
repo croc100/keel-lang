@@ -515,9 +515,15 @@ def emit(d, report, isa=None, loop=1):
             continue
         s = SITES.get(n.attrs.get("unit"))
         inner = g[n.args[0]]
-        if s is None or not isinstance(inner.ty, Vec):
+        # A reduction over vectors -- dot, norm -- returns a SCALAR while its
+        # operands are vectors, so its width comes from what it consumes.
+        # Looking only at the result type made every bind on one silently do
+        # nothing, which is worse than refusing it.
+        wide = inner.ty if isinstance(inner.ty, Vec) else (
+            g[inner.args[0]].ty if inner.op in ("dot", "norm") else None)
+        if s is None or not isinstance(wide, Vec):
             continue
-        if s.lanes >= inner.ty.n and (not s.fmts or "f64" in s.fmts):
+        if s.lanes >= wide.n and (not s.fmts or "f64" in s.fmts):
             if s.kind.startswith("x86"):
                 packed[n.args[0]] = s.name
             else:

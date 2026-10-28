@@ -126,7 +126,9 @@ def vmag(deps):
     """|u|, with the packed path selected by a proven binding."""
     b = B()
     u = b.param("u", Vec(Real("f64", M), 3, "BODY"), -1.0e4, 1.0e4)
-    n = b.norm(b.bind(u, "FMA512", lanes=3))
+    # bind the OPERATION, not the parameter: a binding names the unit that
+    # executes something, and a parameter does not execute
+    n = b.bind(b.norm(u), "FMA512", lanes=3)
     return func("vmag", Def("vmag", n, b.g, dal="C", atol=1e-6, params=(u,),
                             intent="magnitude of a body-frame displacement"))
 
@@ -135,7 +137,8 @@ def vdot(deps):
     b = B()
     u = b.param("u", Vec(Real("f64", M), 3, "BODY"), -1.0e3, 1.0e3)
     v = b.param("v", Vec(Real("f64", M), 3, "BODY"), -1.0e3, 1.0e3)
-    out = b.require(b.dot(u, v), -3.0e6, 3.0e6, M2, "dot stays in range")
+    out = b.require(b.bind(b.dot(u, v), "FMA512", lanes=3),
+                    -3.0e6, 3.0e6, M2, "dot stays in range")
     return func("vdot", Def("vdot", out, b.g, dal="C", atol=1.0,
                             params=(u, v), intent="body-frame inner product"))
 

@@ -1,5 +1,9 @@
 # KEEL
 
+[![ci](https://github.com/croc100/keel-lang/actions/workflows/ci.yml/badge.svg)](https://github.com/croc100/keel-lang/actions/workflows/ci.yml)
+[![license: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
+[![no dependencies](https://img.shields.io/badge/dependencies-none-brightgreen.svg)](pyproject.toml)
+
 **A programming language whose only reader is a machine.**
 
 KEEL programs are not written to be read. They are written to be *checked*.
