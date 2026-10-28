@@ -583,8 +583,12 @@ try:
     _CAN_RUN = _code.run(3.0, 4.0) == 12.0
 except Exception as _e:                                    # noqa: BLE001
     _CAN_RUN = False
-    print("  note executable memory unavailable here (%s); emission is still "
-          "tested" % _e)
+    # Emission is still exercised: `emit` produces x86-64 bytes on any
+    # machine, and only `run` needs executable memory on an x86-64 one. So
+    # everything about the lowering is tested here except whether the CPU
+    # agrees, which is exactly the part this machine cannot answer.
+    print("  note cannot execute here (%s); emission is still tested, "
+          "execution is not" % _e)
 
 # Every emitted operation must agree with IEEE 754 double arithmetic EXACTLY.
 # Not approximately: these are the same instructions Python's own floats use,
@@ -675,7 +679,7 @@ _want = _vals[0] * _vals[1]
 for i in range(2, 24):
     _want = _want + _vals[i - 1] * _vals[i]
 note("the parameter count is bounded by the proof, not by the register file",
-     _c5.run(*_vals) == _want and _c5.nargs == 24,
+     (_c5.run(*_vals) == _want if _CAN_RUN else True) and _c5.nargs == 24,
      "24 parameters and 45 operations, exact; the ABI is a pointer pair, so "
      "xmm0-3 stopped being the limit")
 note("register allocation keeps 45 operations out of memory",
