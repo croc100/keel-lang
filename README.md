@@ -91,6 +91,11 @@ python -m keel check lib/std.kl          # and check it back from glyphs alone
 python -m keel calibrate                 # confront the machine model with this machine
 ```
 
+The build is reproducible, and content addressing is why: `python -m keel.std`
+emits a module byte-identical to the committed `lib/std.kl`, because every
+address is a function of structure alone and there is nothing else in the
+stream.
+
 ---
 
 ## The inversion
