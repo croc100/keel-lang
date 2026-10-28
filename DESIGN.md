@@ -107,7 +107,7 @@ Control therefore cannot come from reading programs. It comes from the fact
 that the *rules* are small enough to read to the end:
 
 ```
-2,251 significant lines, five files.
+2,248 significant lines, five files.
 ```
 
 Three rules keep it that way.
@@ -315,7 +315,7 @@ lie this project refuses everywhere else.
 
 ## 11. The backend, and what it is allowed to be
 
-`backend.py` is 843 lines of hand-written x86-64 encoding with a register
+`backend.py` is 844 lines of hand-written x86-64 encoding with a register
 allocator. It is outside the trust root, and soundly so, for two reasons:
 
 - `check` must accept the definition before `emit` will lower it;

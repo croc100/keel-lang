@@ -17,7 +17,7 @@ Exact units with scale. Reference frames. Proven floating-point error bounds.
 Worst-case execution time. Worst-case energy. Mixed-criticality
 non-interference. Bitwise reproducibility. Explicit memory placement. Linear
 ownership. Capability-scoped effects. Every value in a KEEL program carries
-all of it, and nothing loads unless a 2,251-line checker says yes.
+all of it, and nothing loads unless a 2,248-line checker says yes.
 
 A KEEL program is therefore unreadable not because information was removed
 but because much more of it was added. The unreadable part is the proof, and
@@ -462,7 +462,7 @@ one glyph changed, at each of 124 positions:
 
 ## The trust root
 
-**2,251 significant lines, five files.** That is the whole of what a human
+**2,248 significant lines, five files.** That is the whole of what a human
 must read and believe.
 
 | in the trust root | lines | why |
@@ -471,18 +471,18 @@ must read and believe.
 | `types.py` | 431 | units with exact scale, frames, sites, linearity |
 | `cost.py` | 275 | the cost semantics and the machine model |
 | `hash.py` | 298 | the address encoding — if it is not injective, nothing above it means anything |
-| `ir.py` | 221 | the graph, the envelope, contract implication |
+| `ir.py` | 218 | the graph, the envelope, contract implication |
 
 | outside it | lines | why it is safe |
 |---|---|---|
-| `build.py` | 346 | the builder declares types; the checker re-derives all of them |
-| `backend.py` | 843 | `check` must accept before `emit` lowers, and `verify` re-tests on the CPU |
-| `surface.py` | 594 | a misparse produces a different address, which the seal refuses |
+| `build.py` | 344 | the builder declares types; the checker re-derives all of them |
+| `backend.py` | 844 | `check` must accept before `emit` lowers, and `verify` re-tests on the CPU |
+| `surface.py` | 592 | a misparse produces a different address, which the seal refuses |
 | `calibrate.py` | 219 | it reports disagreements; it never decides anything |
-| `std.py` | 166 | ordinary programs, checked like any other |
+| `std.py` | 167 | ordinary programs, checked like any other |
 | `explain.py` | 88 | explicitly non-authoritative |
 | `wire.py` | 129 | transport only; corruption is corrected or detected |
-| `__main__.py` | 180 | a command line |
+| `__main__.py` | 179 | a command line |
 
 The obligation discharger and the error analysis are deliberately *inside*
 `check.py`, even though it would be tidier to move them out. You are trusting
@@ -514,7 +514,7 @@ the trust root.
   do not yet emit — so the standard library stops where honesty does.
 - **The envelope is sealed but not signed.** There is no cryptographic
   signature and no loader enforcement; addressing is ready, signing is not.
-- **You still have to trust 2,251 lines.** That is the one thing left to a
+- **You still have to trust 2,248 lines.** That is the one thing left to a
   human, and it is the only part of this design that cannot be automated
   away.
 
