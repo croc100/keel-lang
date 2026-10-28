@@ -1,0 +1,57 @@
+name: ci
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  test:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+        python: ["3.9", "3.11", "3.13"]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python }}
+
+      # The proof side is pure Python and must pass everywhere. The code
+      # generator emits x86-64 and refuses to run anywhere else, so the
+      # macOS arm64 runner exercises exactly the part that is portable --
+      # which is the useful thing to learn from it.
+      - name: trust-root suite
+        run: python tests/test_keel.py
+      - name: language suite
+        run: python tests/test_lang.py
+
+      - name: what this runner is
+        run: python -m keel cpu
+
+      - name: build the standard library and check it back from glyphs
+        run: |
+          python -m keel.std > std.kl
+          python -m keel check std.kl
+        shell: bash
+
+      - name: examples
+        run: |
+          python examples/language.py
+          python examples/demo.py
+          python examples/substrate.py
+          python examples/silicon.py
+        shell: bash
+
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - run: pip install flake8
+      - run: flake8 keel tests examples --max-line-length 100
